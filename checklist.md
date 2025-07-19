@@ -25,7 +25,7 @@
 |                   | **Input / Output**   | **Input**: Prompt + LLM Response <br> **Output**: Score (0 \~ 1) |
 |                   | **Model**       |Skywork-Reward-V2-Qwen3-1.7B                                    |
 | **Evaluation**    | **Metrics**          | Toxicity Scores                                                  |
-|                   | **Tools**            | OpenAI Moderation API                    |
+|                   | **Tools**            | Detoxify                  |
 
 Here is your **Plan 1 Checklist** based on your table:
 
@@ -36,7 +36,6 @@ Here is your **Plan 1 Checklist** based on your table:
 ### 🔹 **LLM Algorithm Setup**
 
 * [x] Download **Anthropic HH-RLHF Dataset**
-* [ ] Fine-tune **DeepSeek-R1** using **SFT with HH Dataset**
 * [ ] Set up PPO + RLHF Training Loop with Huggingface TRL
 * [ ] Integrate Reward Scoring in PPO Training (reward from reward model inference)
 * [ ] Complete PPO-based RLHF fine-tuning
@@ -54,7 +53,7 @@ Here is your **Plan 1 Checklist** based on your table:
 ### 🔹 **Evaluation & Validation**
 
 * [ ] Download **AllenAI RealToxicityPrompts**
-* [ ] Set up **OpenAI Moderation API** for output filtering
+* [ ] Set up **Detoxify API** for output filtering
 * [ ] Test RLHF-trained LLM on RealToxicityPrompts
 * [ ] Measure Toxicity Scores on generated outputs
 * [ ] Compare baseline (pre-RLHF) vs. RLHF-tuned model on toxicity metrics
@@ -73,3 +72,4 @@ Here is your **Plan 1 Checklist** based on your table:
 
 * [ ] Set up Detoxify for secondary toxicity scoring
 * [ ] Human-in-the-loop evaluation on sensitive prompts
+

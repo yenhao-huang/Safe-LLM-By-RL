@@ -1,17 +1,8 @@
-| **Category**      | **Decision**         | **Details**                                                      |
-| ----------------- | -------------------- | ---------------------------------------------------------------- |
-| **LLM Algorithm** | **Dataset** | Anthropic HH-RLHF                   |
-|                   | **Update Mechanism**            |  PPO + RLHF                |
-|                   | **Base Model**       | DeepSeek-R1            |
-|                   | **Framework**        | Huggingface Transformers + Trainer                               |
-| **Reward Model**  | **Required FT**          | False          |
-|| **Dataset**          | AllenAI RealToxicityPrompts           |
-|                   | **Input / Output**   | **Input**: Prompt + LLM Response <br> **Output**: Score (0 \~ 1) |
-|                   | **Model**       |Skywork-Reward-V2-Qwen3-1.7B                                    |
-| **Evaluation**    | **Metrics**          | Toxicity Scores                                                  |
-|                   | **Tools**            | OpenAI Moderation API                    |
 
 
+## Dataset
+* format: json
+* #training: 160K; #testing: 8k
 
 
 
