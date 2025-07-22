@@ -12,10 +12,12 @@ from utils import utils, data_utils, model_utils, metric_utils, pred_utils
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Evaluate")
+    parser.add_argument("--dataset", type=str, default="real_toxic_prompt")
     parser.add_argument("--text_col", type=str, default="chosen")
     parser.add_argument("--label_col", type=str, default="label")
     parser.add_argument("--n_labels", type=int, default=2)
     parser.add_argument("--seq_len", type=int, default=1024)
+    parser.add_argument("--max_new_token", type=int, default=150)
     parser.add_argument("--enable_lora", type=bool, default=False)
     parser.add_argument("--model", type=str, default="deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B")
     parser.add_argument("--eval_batch", type=int, default=1)
@@ -27,14 +29,26 @@ def parse_args():
 if __name__ == "__main__":
     args = parse_args()
     output_dir, log_dir = utils.make_dir_with_timestamp(args.output_dir, args.log_dir)
-    raw_data = data_utils.download_anthropic_hh()
-
-    data_utils.select_partial_data(
-        raw_data, 
-        train_size=10, 
-        test_size=8000, 
-        seed=42
-    )
+    if args.dataset == "hh_rlhf":
+        raw_data = data_utils.download_anthropic_hh()
+        data_utils.select_partial_data(
+            raw_data, 
+            train_size=10, 
+            test_size=8000, 
+            seed=42
+        )
+    elif args.dataset == "toxity_hh":
+        raw_data = data_utils.load_toxicity_subset()
+    elif args.dataset == "real_toxic_prompt":
+        raw_data = data_utils.load_real_toxic_prompt()
+        data_utils.select_partial_data(
+            raw_data, 
+            train_size=10, 
+            test_size=8000, 
+            seed=42
+        )
+    
+    data_utils.prompt_engineering(raw_data)
 
     tonkenized_data, tokenizer = data_utils.data_preprocess(
         raw_data, 
@@ -56,7 +70,7 @@ if __name__ == "__main__":
         test_dataset, 
         args.text_col,
         args.eval_batch,
-        max_new_tokens=50,
+        max_new_tokens=args.max_new_token,
     )
 
     detox_model = Detoxify('original')

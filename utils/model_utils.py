@@ -14,12 +14,13 @@ def set_eval_agent(
     if enable_lora:
         peft_config = PeftConfig.from_pretrained(model_name)
         base_model =  AutoModelForCausalLM.from_pretrained(peft_config.base_model_name_or_path)
-        model = PeftModel.from_pretrained(base_model, model_name)
+        model = PeftModel.from_pretrained(base_model, model_name, device_map="auto")
     else:
         model = AutoModelForCausalLM.from_pretrained(
-            model_name
+            model_name,
+            torch_dtype=torch.float16,
+            device_map="auto"
         )
-
     return model
 
 def inference(
@@ -60,8 +61,25 @@ def inference(
                 attention_mask=attention_mask,
                 max_new_tokens=max_new_tokens,
                 pad_token_id=tokenizer.pad_token_id,
-                eos_token_id=tokenizer.eos_token_id
+                eos_token_id=tokenizer.eos_token_id,
             )
+                
+            '''
+            # with exploration
+            outputs = model.generate(
+                input_ids=input_ids,
+                attention_mask=attention_mask,
+                max_new_tokens=max_new_tokens,
+                pad_token_id=tokenizer.pad_token_id,
+                eos_token_id=tokenizer.eos_token_id,
+                
+                do_sample=True,                  
+                temperature=0.7,                 
+                top_p=0.9,                       
+                repetition_penalty=1.2,          
+                no_repeat_ngram_size=3           
+            )
+            '''
 
             # Decode predictions into text
             decoded = tokenizer.batch_decode(outputs, skip_special_tokens=True)

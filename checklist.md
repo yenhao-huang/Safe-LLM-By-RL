@@ -12,6 +12,46 @@
 | **Evaluation**    | **Metrics**          | Toxicity Scores                                                  |
 |                   | **Tools**            | - OpenAI Moderation API <br> - Detoxify API                      |
 
+### **LLM Algorithm**
+
+* **Dataset**
+    * Anthropic HH-RLHF
+    * Kaggle Toxic Comment Classification Challenge
+* **Update Mechanism**
+  * PPO + RLHF
+  * DPO + SFT
+* **Base Model**
+  * DeepSeek-R1
+  * LLaMA
+* **Framework**
+    * Huggingface Transformers + Trainer
+
+---
+
+### **Reward Model**
+
+* **Dataset**
+  * lmsys/toxic-chat
+  * AllenAI RealToxicityPrompts
+* **Input / Output**
+  * **Input**：Prompt + LLM Response
+  * **Output**：Score（0 \~ 1）
+* **Model**
+    * **Train from scratch**: DeBERTa-V3（Encoder-based LM）
+    * **FineTune**: Skywork/Skywork-Reward-V2-Qwen3-1.7B
+* **Loss Function**
+    * Pairwise Ranking Loss
+
+---
+
+### **Evaluation**
+
+* **Metrics**
+  * Toxicity Scores
+* **Tools**
+  * Detoxify API
+  * OpenAI Moderation API
+
 ## Plan1
 
 | **Category**      | **Decision**         | **Details**                                                      |
@@ -26,50 +66,3 @@
 |                   | **Model**       |Skywork-Reward-V2-Qwen3-1.7B                                    |
 | **Evaluation**    | **Metrics**          | Toxicity Scores                                                  |
 |                   | **Tools**            | Detoxify                  |
-
-Here is your **Plan 1 Checklist** based on your table:
-
----
-
-## ✅ Checklist
-
-### 🔹 **LLM Algorithm Setup**
-
-* [x] Download **Anthropic HH-RLHF Dataset**
-* [ ] Set up PPO + RLHF Training Loop with Huggingface TRL
-* [ ] Integrate Reward Scoring in PPO Training (reward from reward model inference)
-* [ ] Complete PPO-based RLHF fine-tuning
-
----
-
-### 🔹 **Reward Model (Inference Only)**
-
-* [ ] Download **Skywork-Reward-V2-Qwen3-1.7B**
-* [ ] Load and integrate reward model into PPO loop (inference only, no fine-tuning)
-* [ ] Validate reward model scoring logic on sample prompts
-
----
-
-### 🔹 **Evaluation & Validation**
-
-* [ ] Download **AllenAI RealToxicityPrompts**
-* [ ] Set up **Detoxify API** for output filtering
-* [ ] Test RLHF-trained LLM on RealToxicityPrompts
-* [ ] Measure Toxicity Scores on generated outputs
-* [ ] Compare baseline (pre-RLHF) vs. RLHF-tuned model on toxicity metrics
-
----
-
-### 🔹 **Final Deliverables**
-
-* [ ] PPO + RLHF-tuned **DeepSeek-R1 Checkpoint**
-* [ ] Toxicity Evaluation Report (with OpenAI Moderation & RealToxicityPrompts)
-* [ ] Summary of Toxicity Reduction and Model Behavior
-
----
-
-### 🔹 Optional but Recommended
-
-* [ ] Set up Detoxify for secondary toxicity scoring
-* [ ] Human-in-the-loop evaluation on sensitive prompts
-
